@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Love Rain Neon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      height: 100vh;
+      perspective: 1000px;
+      font-family: 'Pacifico', cursive;
+      cursor: crosshair;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      pointer-events: none;
+    }
+
+    .text-drop {
+      position: absolute;
+      top: -100px;
+      color: #ff69b4;
+      font-size: 1.7em;
+      font-weight: bold;
+      text-shadow: 0 0 5px #ff69b4, 0 0 10px #ff1493, 0 0 20px #ff69b4;
+      white-space: nowrap;
+      animation: fallText linear forwards;
+    }
+
+    @keyframes fallText {
+      0% { top: -100px; opacity: 0; }
+      10% { opacity: 1; }
+      100% { top: 110vh; opacity: 0; }
+    }
+
+    .heart {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: red;
+      transform: rotate(45deg);
+      animation: fallHeart linear forwards;
+      opacity: 0.8;
+      z-index: 0;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -7.5px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -7.5px;
+      top: 0;
+    }
+
+    @keyframes fallHeart {
+      0% { top: -20px; opacity: 0; }
+      10% { opacity: 0.8; }
+      100% { top: 110vh; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container"></div>
+
+  <script>
+    const container = document.getElementById("container");
+    const phrases = ["I Love You", "Kang Ta", "Tiểu Ma Nữ"];
+    let counter = 0;
+
+    document.addEventListener("mousemove", (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 30;
+      const y = (e.clientY / window.innerHeight - 0.5) * -30;
+      container.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    });
+
+    function createRainItem() {
+      const text = document.createElement("div");
+      text.className = "text-drop";
+      text.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+      const left = Math.random() * 100;
+      text.style.left = `${left}vw`;
+      const duration = (2 + Math.random() * 3).toFixed(2) + "s";
+      text.style.animationDuration = duration;
+      container.appendChild(text);
+      setTimeout(() => text.remove(), 7000);
+
+      if (counter % 5 === 0) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = `${left}vw`;
+        heart.style.top = "-20px";
+        heart.style.animationDuration = duration;
+        container.appendChild(heart);
+        setTimeout(() => heart.remove(), 7000);
+      }
+
+      counter++;
+    }
+setInterval(() => {
+      for (let i = 0; i < 10; i++) {
+        createRainItem();
+      }
+    }, 200);
+  </script>
+</body>
+</html>
